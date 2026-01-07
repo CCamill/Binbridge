@@ -1,0 +1,39 @@
+# Binbridge Dependencies
+# =====================
+
+# PyTorch (根据 CUDA 版本选择)
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Transformers & PEFT
+transformers>=4.35.0
+peft>=0.6.0
+accelerate>=0.24.0
+
+# 量化支持
+bitsandbytes>=0.41.0
+
+# 数据处理
+numpy>=1.24.0
+pandas>=2.0.0
+
+# 进度条和日志
+tqdm>=4.65.0
+tensorboard>=2.14.0
+wandb>=0.15.0  # 可选
+
+# 评估
+evaluate>=0.4.0
+sacrebleu>=2.3.0  # 可选，用于 BLEU 计算
+
+# API (用于教师模型)
+openai>=1.0.0  # 可选，用于 GPT-4 CoT 生成
+
+# 开发工具
+pytest>=7.4.0
+black>=23.0.0
+isort>=5.12.0
+
+# 其他
+python-dotenv>=1.0.0
+PyYAML>=6.0.0
