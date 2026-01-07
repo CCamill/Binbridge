@@ -62,7 +62,7 @@ pip install -r requirements.txt
     "assembly": "push rbp\nmov rbp, rsp\n...",
     "function_name": "calculate_checksum",
     "arch": "x86_64",
-    "opt": "O2",
+    "opt": "O2",git config --global user.name 
     "analysis": "可选的思维链分析..."
 }
 ```
