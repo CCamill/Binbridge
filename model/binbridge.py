@@ -55,10 +55,10 @@ class Binbridge(nn.Module):
     def __init__(
         self,
         # Encoder 配置
-        encoder_model_name: str = "bert-base-uncased",
+        encoder_model_name: str = "hustcw/clap-asm",
         encoder_hidden_size: int = 768,
-        max_seq_length: int = 512,
-        window_size: int = 512,
+        max_seq_length: int = 2048,
+        window_size: int = 2048,
         stride: int = 256,
         freeze_encoder: bool = True,
         # Q-Former 配置

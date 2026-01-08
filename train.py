@@ -24,8 +24,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import BinbridgeConfig, get_default_config
 from model.binbridge import Binbridge, HybridLoss
-from model.encoder import AssemblyTokenizer
-from data.dataset import BinbridgeDataset, create_dataloader
+from csv_dataset import create_csv_dataloader, CSVBinbridgeDataset
 
 
 # 配置日志
@@ -443,15 +442,15 @@ def main():
     
     # 创建数据集
     logger.info("Loading datasets...")
-    train_dataset = BinbridgeDataset(
-        data_path=config.data.train_data_path,
+    train_dataset = CSVBinbridgeDataset(
+        csv_path=config.data.train_data_path,
         assembly_tokenizer=model.assembly_tokenizer,
         llm_tokenizer=model.llm_tokenizer,
         use_cot=config.data.use_cot,
         cot_data_path=config.data.cot_data_path
     )
     
-    train_dataloader = create_dataloader(
+    train_dataloader = create_csv_dataloader(
         train_dataset,
         batch_size=config.training.batch_size,
         shuffle=True,
@@ -460,13 +459,13 @@ def main():
     
     eval_dataloader = None
     if config.data.eval_data_path:
-        eval_dataset = BinbridgeDataset(
-            data_path=config.data.eval_data_path,
+        eval_dataset = CSVBinbridgeDataset(
+            csv_path=config.data.eval_data_path,
             assembly_tokenizer=model.assembly_tokenizer,
             llm_tokenizer=model.llm_tokenizer,
             use_cot=config.data.use_cot
         )
-        eval_dataloader = create_dataloader(
+        eval_dataloader = create_csv_dataloader(
             eval_dataset,
             batch_size=config.training.batch_size,
             shuffle=False
