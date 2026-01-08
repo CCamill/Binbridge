@@ -12,7 +12,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from data.csv_dataset import CSVBinbridgeDataset, OllamaCOTGenerator
+from scripts.csv_dataset import CSVBinbridgeDataset, OllamaCOTGenerator
 
 
 def test_csv_dataset():

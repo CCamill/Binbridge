@@ -23,6 +23,8 @@ binbridge/
 ├── inference.py           # 推理脚本
 ├── utils.py               # 工具函数
 ├── requirements.txt       # 依赖列表
+├── tmp/
+│   ├── CoT_prompt.md      # 提示词模板
 ├── model/
 │   ├── __init__.py
 │   ├── encoder.py         # 滑动窗口编码器
@@ -30,9 +32,11 @@ binbridge/
 │   └── binbridge.py       # 主模型
 ├── data/
 │   ├── __init__.py
-│   └── dataset.py         # 数据集处理
+│   └── train.csv
+|   └── eval.csv
 └── scripts/
-    └── prepare_data.py    # 数据准备脚本
+    └── generate_cot_from_csv.py    # 数据准备脚本
+    └── csv_dataset.py         # 数据集处理
 ```
 
 ## 🚀 快速开始
@@ -56,28 +60,19 @@ pip install -r requirements.txt
 
 ### 准备数据
 
-数据格式为 JSON，每个样本包含：
-```json
-{
-    "assembly": "push rbp\nmov rbp, rsp\n...",
-    "function_name": "calculate_checksum",
-    "arch": "x86_64",
-    "opt": "O2",git config --global user.name 
-    "analysis": "可选的思维链分析..."
-}
-```
+数据格式为 CSV，每个样本包含：
 
 生成示例数据：
 ```bash
-python -c "from data.dataset import generate_sample_data; generate_sample_data('./data/train.json', 1000)"
+python -c "from data.dataset import generate_sample_data; generate_sample_data('./data/train.csv', 1000)"
 ```
 
 ### 训练
 
 ```bash
 python train.py \
-    --train_data ./data/train.json \
-    --eval_data ./data/eval.json \
+    --train_data ./data/train.csv \
+    --eval_data ./data/eval.csv \
     --output_dir ./outputs \
     --epochs 10 \
     --batch_size 4 \
@@ -91,8 +86,8 @@ python train.py \
 # 批量推理
 python inference.py \
     --model_path ./outputs/best_model \
-    --input ./data/test.json \
-    --output ./results.json \
+    --input ./data/test.csv \
+    --output ./results.csv \
     --batch_size 8
 
 # 交互模式
@@ -139,10 +134,10 @@ python inference.py \
 
 ### 3. 蒸馏式思维链
 
-训练时使用 GPT-4 生成的分析作为监督信号：
+训练时使用 Qwen 生成的分析作为监督信号：
 
 ```
-教师模型 (GPT-4 + 源代码)
+教师模型 (Qwen + 源代码)
     ↓
 生成三阶段分析：
 1. 架构与约定分析
@@ -160,17 +155,6 @@ $$\mathcal{L} = \lambda_{analysis} \cdot \mathcal{L}_{analysis} + \lambda_{name}
 - $\mathcal{L}_{analysis}$: 分析部分的交叉熵损失
 - $\mathcal{L}_{name}$: 函数名部分的交叉熵损失
 - 默认权重: $\lambda_{analysis}=0.3$, $\lambda_{name}=0.7$
-
-## 📊 性能指标
-
-| 指标 | 值 |
-|------|-----|
-| 精确匹配率 | 45.2% |
-| Token 准确率 | 78.6% |
-| BLEU-4 | 0.423 |
-| 推理速度 | ~50 samples/sec |
-
-*注：以上为示例数据，实际性能取决于训练数据质量和规模*
 
 ## ⚙️ 配置说明
 
@@ -199,36 +183,6 @@ $$\mathcal{L} = \lambda_{analysis} \cdot \mathcal{L}_{analysis} + \lambda_{name}
 | `batch_size` | 4 | 批大小 |
 | `gradient_accumulation_steps` | 4 | 梯度累积步数 |
 | `qlora_r` | 64 | LoRA 秩 |
-
-## 📝 数据量建议
-
-根据实战经验：
-
-| 阶段 | 数据量 | 效果 |
-|------|--------|------|
-| 验证原型 (MVP) | 500-1,000 条 | 模型掌握 XML 格式 |
-| 具备实战能力 | 3,000-10,000 条 | 思维链蒸馏效果显现 |
-| 生产级/SOTA | 50,000+ 条 | 覆盖冷门架构和优化级别 |
-
-**策略建议**：先用 GPT-4 生成 1,000 条高质量的"教科书级"分析，用这 1k 条去微调，效果可能已经惊人地好了。
-
-## 🔧 常见问题
-
-**Q: 显存不足怎么办？**
-
-A: 尝试以下方法：
-- 减小 `batch_size`
-- 增大 `gradient_accumulation_steps`
-- 确保启用了 4-bit 量化 (`load_in_4bit=True`)
-- 减少 `num_query_tokens`
-
-**Q: 如何处理非 x86 架构？**
-
-A: 在训练数据中包含 ARM、MIPS 等架构的样本，模型会自动学习架构特定的模式。
-
-**Q: 推理时需要保留分析过程吗？**
-
-A: 不需要。推理时分析过程作为"思维暂存区"对逻辑连贯性至关重要，但最终只返回函数名。
 
 ## 📄 许可证
 
