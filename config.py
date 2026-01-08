@@ -12,8 +12,8 @@ import torch
 class EncoderConfig:
     """汇编编码器配置"""
     # 滑动窗口参数
-    max_seq_length: int = 512  # L_max: 预训练模型的最大序列长度
-    window_size: int = 512  # W: 窗口大小
+    max_seq_length: int = 2048  # L_max: 预训练模型的最大序列长度
+    window_size: int = 2048  # W: 窗口大小
     stride: int = 256  # S: 步长
     overlap_ratio: float = 0.5  # γ: 重叠率 (W-S)/W
     
@@ -23,7 +23,7 @@ class EncoderConfig:
     freeze_encoder: bool = True  # 是否冻结编码器参数
     
     # 如果使用 BERT 类模型作为替代
-    pretrained_encoder_path: str = "bert-base-uncased"
+    pretrained_encoder_path: str = "hustcw/clap-asm"
 
 
 @dataclass
@@ -70,7 +70,7 @@ class LLMConfig:
 class TrainingConfig:
     """训练配置"""
     # 基础训练参数
-    num_epochs: int = 10
+    num_epochs: int = 100
     batch_size: int = 4
     gradient_accumulation_steps: int = 4
     learning_rate: float = 2e-4
@@ -98,8 +98,8 @@ class TrainingConfig:
     bf16: bool = False
     
     # 数据配置
-    max_input_length: int = 4096  # 最大输入汇编指令数
-    max_output_length: int = 512  # 最大输出长度
+    max_input_length: int = 4096*2  # 最大输入汇编指令数
+    max_output_length: int = 128  # 最大输出长度
 
 
 @dataclass
