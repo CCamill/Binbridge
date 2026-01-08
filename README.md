@@ -162,8 +162,8 @@ $$\mathcal{L} = \lambda_{analysis} \cdot \mathcal{L}_{analysis} + \lambda_{name}
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
-| `max_seq_length` | 512 | 预训练模型最大长度 |
-| `window_size` | 512 | 滑动窗口大小 |
+| `max_seq_length` | 2048 | 预训练模型最大长度 |
+| `window_size` | 2048 | 滑动窗口大小 |
 | `stride` | 256 | 滑动步长 |
 | `freeze_encoder` | True | 是否冻结编码器 |
 
@@ -199,9 +199,9 @@ MIT License
 如果您使用了 Binbridge，请引用：
 
 ```bibtex
-@article{binbridge2024,
-  title={Binbridge: Multimodal LLM for Binary Code Function Naming},
-  author={Your Name},
-  year={2024}
+@article{binbridge2026,
+  title={Binbridge},
+  author={Jiajia Sun},
+  year={2026}
 }
 ```
