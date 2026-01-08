@@ -1,1 +1,11 @@
 data
+README.md
+tmp
+test
+scripts
+model
+config.py
+inference.py
+requirements.txt
+train.py
+utils.py
